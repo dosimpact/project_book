@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  author      String?
+  birthday    DateTime?
+  BookType_id Int?
+  id          Int        @default(autoincrement()) @id
+  publisher   String?
+  title       String?
+  BookType    BookType?  @relation(fields: [BookType_id], references: [id])
+  BookInfo    BookInfo[]
+
+  @@index([BookType_id], name: "fk_Book_BookType_idx")
+}
+
+model BookInfo {
+  Book_id     Int?
+  id          Int           @default(autoincrement()) @id
+  isReserved  Int?
+  Book        Book?         @relation(fields: [Book_id], references: [id])
+  BookSide    BookSide[]
+  Lent        Lent[]
+  Reservation Reservation[]
+
+  @@index([Book_id], name: "fk_BookInfo_Book1_idx")
+}
+
+model BookSide {
+  BookInfo_id Int?
+  id          Int       @default(autoincrement()) @id
+  name        String?
+  BookInfo    BookInfo? @relation(fields: [BookInfo_id], references: [id])
+
+  @@index([BookInfo_id], name: "fk_BookSide_BookInfo1_idx")
+}
+
+model BookType {
+  id   Int     @default(autoincrement()) @id
+  type String?
+  Book Book[]
+}
+
+model Lent {
+  BookInfo_id Int?
+  freeday     Int?
+  id          Int       @default(autoincrement()) @id
+  islentSide  Int?
+  lentEnd     DateTime?
+  lentStart   DateTime?
+  User_id     Int?
+  BookInfo    BookInfo? @relation(fields: [BookInfo_id], references: [id])
+  User        User?     @relation(fields: [User_id], references: [id])
+
+  @@index([BookInfo_id], name: "fk_Lent_BookInfo1_idx")
+  @@index([User_id], name: "fk_Lent_User1_idx")
+}
+
+model Reservation {
+  BookInfo_id Int?
+  id          Int       @default(autoincrement()) @id
+  time        DateTime?
+  User_id     Int?
+  BookInfo    BookInfo? @relation(fields: [BookInfo_id], references: [id])
+  User        User?     @relation(fields: [User_id], references: [id])
+
+  @@index([BookInfo_id], name: "fk_Reservation_BookInfo1_idx")
+  @@index([User_id], name: "fk_Reservation_User1_idx")
+}
+
+model User {
+  address     String?
+  email       String?
+  grade       String?
+  id          Int           @default(autoincrement()) @id
+  name        String?
+  ph          String?
+  ssn         String?
+  Lent        Lent[]
+  Reservation Reservation[]
+}

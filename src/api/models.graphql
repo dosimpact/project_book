@@ -1,0 +1,66 @@
+type Book {
+  author: String
+  birthday: String
+  BookType_id: Int
+  id: Int
+  publisher: String
+  title: String
+  BookType: BookType
+  BookInfo: [BookInfo]
+}
+
+type BookInfo {
+  Book_id: Int
+  id: Int
+  isReserved: Int
+  Book: Book
+  BookSide: [BookSide]
+  Lent: [Lent]
+  Reservation: [Reservation]
+}
+
+type BookSide {
+  BookInfo_id: Int
+  id: Int
+  name: String
+  BookInfo: BookInfo
+}
+
+type BookType {
+  id: Int
+  type: String
+  Book: [Book]
+}
+
+type Lent {
+  BookInfo_id: Int
+  freeday: Int
+  id: Int
+  islentSide: Int
+  lentEnd: String
+  lentStart: String
+  User_id: Int
+  BookInfo: BookInfo
+  User: User
+}
+
+type Reservation {
+  BookInfo_id: Int
+  id: Int
+  time: String
+  User_id: Int
+  BookInfo: BookInfo
+  User: User
+}
+
+type User {
+  address: String
+  email: String
+  grade: String
+  id: Int
+  name: String
+  ph: String
+  ssn: String
+  Lent: [Lent]
+  Reservation: [Reservation]
+}
